@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	file, _ := os.Open("./test.text")
+	file, _ := os.Open("./input.text")
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
