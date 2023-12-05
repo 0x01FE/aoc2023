@@ -33,7 +33,8 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	var seed_to_soil []*ConversionRange
+	// var seed_to_soil []*ConversionRange
+	var seed_to_soil [][]int
 
 	// Parse file
 	index := 0
@@ -65,9 +66,7 @@ func main() {
 		if s_to_s_mapping {
 			if line == "" {
 				s_to_s_mapping = false
-				for _, r := range seed_to_soil {
-					print(r)
-				}
+				fmt.Println("seeds to soil ", seed_to_soil)
 				continue
 			} else {
 				var r_values []int
@@ -77,18 +76,26 @@ func main() {
 					r_values = append(r_values, r_value)
 				}
 
-				var temp *ConversionRange
-				temp = new(ConversionRange)
+				// var temp *ConversionRange
+				// temp = new(ConversionRange)
 
-				temp.target_start = r_values[0]
-				temp.source_start = r_values[1]
+				var temp_s_to_s []int
+
+				target_start := r_values[0]
+				source_start := r_values[1]
 				length := r_values[2]
 
-				temp.target_end = temp.target_start + length
-				temp.source_end = temp.source_start + length
-				temp.translate = temp.target_start - temp.target_end
+				target_end := target_start + length
+				source_end := source_start + length
+				translate := target_start - target_end
 
-				seed_to_soil = append(seed_to_soil, temp)
+				temp_s_to_s = append(temp_s_to_s, target_start)
+				temp_s_to_s = append(temp_s_to_s, target_end)
+				temp_s_to_s = append(temp_s_to_s, source_start)
+				temp_s_to_s = append(temp_s_to_s, source_end)
+				temp_s_to_s = append(temp_s_to_s, translate)
+
+				seed_to_soil = append(seed_to_soil, temp_s_to_s)
 			}
 		}
 
