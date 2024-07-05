@@ -13,6 +13,9 @@ class Point:
     def add(self, other):
         return Point(self.x + other.x, self.y + other.y)
 
+    def to_tuple(self) -> tuple:
+        return (self.x, self.y)
+
     def __str__(self) -> str:
         return f'P({self.x}, {self.y})'
 
@@ -67,6 +70,25 @@ pipe_directions = {
     'S' : True
 }
 
+def shoelace(points: list[Point]) -> int:
+    A = 0
+
+    n = len(points)
+    for i in range(0, n):
+        x1, y1 = points[i].to_tuple()
+
+        if not i + 1 >= n:
+            x2, y2 = points[i + 1].to_tuple()
+
+        else:
+            x2, y2 = points[0].to_tuple()
+
+        A += (x1 * y2) - (x2 * y1)
+
+    A *= 0.5
+
+    return abs(A)
+
 def main():
 
     pipe_map = PipeMap(INPUT_FILE)
@@ -75,6 +97,8 @@ def main():
     next_directions = None
     current_pos: Point = pipe_map.start_position
     last_pos: Point = current_pos
+
+    boundaries: list[Point] = [current_pos]
 
     for d in directions:
         new_pos = pipe_map.start_position.add(directions[d])
@@ -102,13 +126,31 @@ def main():
             potential_directions: list[Point] = pipe_directions[pipe_map.pipe_map[potential_pos.x][potential_pos.y]]
 
             if pipe_map.in_bounds(potential_pos) and potential_pos != last_pos and potential_directions:
+                boundaries.append(current_pos)
                 last_pos = current_pos
                 current_pos = potential_pos
                 next_directions = potential_directions
                 steps += 1
                 break
 
+    """
+    I did actually look at the internet for this one. I found 'how to find area of polygon'
+    and came up with Pick's theorem & the Shoelace formula
 
+    So basically I find the area with the Shoelace formula (A) and then using Pick's theorem find the number
+    of interior points (i) with
+
+    i = A - b/2 - 1
+
+    where b is boundary points
+    """
+
+    A = shoelace(boundaries)
+
+    print(f'Area: {A}')
+    interior = A - (len(boundaries) / 2) + 1
+
+    print(f'Interior Points: {interior}')
     print(f'Loop finished, start found in {steps} steps')
     print(f'Critter is at {math.ceil(steps/2)}')
 
