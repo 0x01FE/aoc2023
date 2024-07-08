@@ -1,7 +1,9 @@
 import math
-INPUT_FILE = "test.text"
+INPUT_FILE = "input.text"
 
-I = 10
+I = 1000000
+if I != 1:
+    I -= 1
 
 class Point:
     x: int
@@ -57,42 +59,20 @@ def main():
             if row[x] == '#':
                 galaxies.append(Point(x, y))
 
-    print(f'galaxys {len(galaxies)}')
-
     # Check for expansion (y direction)
     expansions = 0
     for y in range(0, len(universe)):
         row: str = universe[y]
 
         if row.find('#') == -1:
-            print(f'no galaxy at y {y}')
             for g in galaxies:
                 if g.y > y + (expansions * I):
-                    print(f'{g}, > {y}')
                     g.y += I
             expansions += 1
-
-    for p in galaxies:
-        print(p)
-    print()
 
     # Check for expansions (x direction)
     expansions = 0
     for x in range(0, len(universe[0])):
-        # no_galaxy = True
-
-        # for g in galaxies:
-        #     # print(f'{g.x} == {x}')
-        #     if g.x == x + expansions:
-        #         no_galaxy = False
-        #         break
-
-        # if no_galaxy:
-        #     print(f'no galaxy on x {x}')
-        #     for g in galaxies:
-        #         if g.x > x + expansions:
-        #             g.x += I
-        #     expansions += 1
 
         no_galaxy = True
 
@@ -102,16 +82,10 @@ def main():
                 break
 
         if no_galaxy:
-            print(f'no galaxy on x {x}')
             for g in galaxies:
                 if g.x > x + (expansions * I):
-                    print(f'{g} > {x}')
                     g.x += I
             expansions += 1
-
-
-    for p in galaxies:
-        print(p)
 
     # ok now find lengths or something
     total = 0
@@ -132,7 +106,7 @@ def main():
 
 
 
-    print(f'Sum is {total/2}')
+    print(f'Sum is {int(total/2)}')
 
 
 
